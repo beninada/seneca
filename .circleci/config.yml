@@ -12,12 +12,21 @@ jobs:
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mysql:9.4
+      - image: circleci/mysql:5.7
+        environment: 
+          MYSQL_DATABASE: seneca_test
+          MYSQL_USER: seneca_test
+          MYSQL_PASSWORD: secret
+          MYSQL_ROOT_PASSWORD: root
 
     working_directory: ~/repo
 
     steps:
       - checkout
+
+      - run: chmod -R 777 storage
+
+      - run: cp .env.testing .env
 
       # Download and cache dependencies
       - restore_cache:
@@ -49,4 +58,4 @@ jobs:
       # run tests!
       # - run: phpunit
 
-      - run: php artisan migrate --env=testing --database=mysql_testing --force 
+      - run: php artisan migrate --database=seneca_test --force
