@@ -17,8 +17,6 @@ jobs:
           MYSQL_HOST: 127.0.0.1
           MYSQL_DATABASE: seneca_test
           MYSQL_ALLOW_EMPTY_PASSWORD: true
-          MYSQL_PASSWORD:
-          MYSQL_ROOT_PASSWORD:
 
     working_directory: ~/repo
 
