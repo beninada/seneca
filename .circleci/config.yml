@@ -18,6 +18,8 @@ jobs:
           MYSQL_DATABASE: seneca_test
           MYSQL_ALLOW_EMPTY_PASSWORD: true
 
+      - image: arey/mysql-client
+
     working_directory: ~/repo
 
     steps:
@@ -57,6 +59,6 @@ jobs:
       # run tests!
       # - run: phpunit
 
-      # - run: mysql -h 127.0.0.1 -u root -e "create database seneca_test;"
+      - run: mysql -u root -e "create database seneca_test;"
 
       - run: php artisan migrate --database=seneca_test --force
