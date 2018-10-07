@@ -14,10 +14,11 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       - image: circleci/mysql:5.7
         environment: 
+          MYSQL_HOST: 127.0.0.1
           MYSQL_DATABASE: seneca_test
-          MYSQL_USER: seneca_test
-          MYSQL_PASSWORD: secret
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: root
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_PASSWORD:
 
     working_directory: ~/repo
 
@@ -57,5 +58,9 @@ jobs:
         
       # run tests!
       # - run: phpunit
+
+       - run:
+          name: create db
+          command: mysql -h 127.0.0.1 -u root -e "create database seneca_test;"
 
       - run: php artisan migrate --database=seneca_test --force
