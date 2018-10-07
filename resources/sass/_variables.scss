@@ -1,9 +1,11 @@
 
 // Body
-$body-bg: #f8fafc;
+$body-bg: #fff;
 
 // Typography
-$font-family-sans-serif: "Nunito", sans-serif;
+$font-family-sans-serif: sans-serif;
+$font-family-monospace: monospace;
+$font-family-default: $font-family-monospace;
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
 
