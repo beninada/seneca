@@ -13,7 +13,7 @@ jobs:
       # CircleCI maintains a library of pre-built images
       # documented at https://circleci.com/docs/2.0/circleci-images/
       - image: circleci/mysql:5.7
-        environment: 
+        environment:
           MYSQL_HOST: 127.0.0.1
           MYSQL_DATABASE: seneca_test
           MYSQL_ALLOW_EMPTY_PASSWORD: true
@@ -59,6 +59,6 @@ jobs:
       # run tests!
       # - run: phpunit
 
-      - run: mysql -u root -e "create database seneca_test;"
+      - run: mysql -h=127.0.0.1 -u root -e "create database seneca_test;"
 
       - run: php artisan migrate --database=seneca_test --force
