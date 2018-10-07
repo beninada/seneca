@@ -57,6 +57,6 @@ jobs:
       # run tests!
       # - run: phpunit
 
-      - run: mysql -h 127.0.0.1 -u root -e "create database seneca_test;"
+      # - run: mysql -h 127.0.0.1 -u root -e "create database seneca_test;"
 
       - run: php artisan migrate --database=seneca_test --force
