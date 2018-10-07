@@ -12,7 +12,7 @@ class UserProfile extends Model
      * @var array
      */
     protected $fillable = [
-        'bio', 'city', 'country',
+        'user_id', 'bio', 'city', 'country',
     ];
 
     /**

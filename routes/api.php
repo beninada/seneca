@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Auth\RegisterController as RegisterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,4 +16,11 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::post('/user', function (Request $request) {
+    $registerController = new RegisterController();
+    $response = $registerController->create($request->all());
+
+    return \Response::json($response, 200);
 });
