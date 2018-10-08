@@ -23,9 +23,12 @@ jobs:
     steps:
       - checkout
 
+      - run: cp .env.testing .env
+
       - run: chmod -R 777 storage
 
       - run: sudo docker-php-ext-install pdo_mysql
+
       - run: sudo docker-php-ext-enable pdo_mysql
 
       # Download and cache dependencies
