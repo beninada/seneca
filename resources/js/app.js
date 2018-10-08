@@ -7,10 +7,33 @@
 
 require('./bootstrap');
 
-import React from 'react';
-import { render } from 'react-dom';
-import { Router, Route, browserHistory } from 'react-router';
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import { Redirect, Route, Switch } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
+import Home from './components/Home';
 
-import Example from './components/Example';
+class App extends Component {
+  constructor(props) {
+    super(props);
+    console.log('asdf');
+  }
 
-render(<Example />, document.getElementById('example'));
+  render() {
+    return (
+      <BrowserRouter>
+        {/* { this.error ? <Redirect from='/' to='login' /> : '' } */}
+        <Switch>
+          {/* <Route exact path='/' component={Landing} />
+          <Route path='/signup' component={Signup} /> */}
+          <Route exact path='/' component={Home} />
+          <Route render={function () {
+            return <p>Not Found</p>
+          }} />
+        </Switch>
+      </BrowserRouter>
+    );
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById('root'));
