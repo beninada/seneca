@@ -14,13 +14,22 @@ use App\Http\Controllers\Auth\RegisterController as RegisterController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
-Route::post('/user', function (Request $request) {
+Route::post('/users', function (Request $request) {
     $registerController = new RegisterController();
     $response = $registerController->create($request->all());
 
     return \Response::json($response, 200);
+});
+
+Route::get('/users', function (Request $request) {
+    return \Response::json([], 200);
+});
+
+Route::get('/test', function (Request $request) {
+    \Log::info('test log');
+    return \Response::json(['yep works'], 200);
 });
