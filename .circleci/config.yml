@@ -8,8 +8,6 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/php:7.2-node-browsers
-        environment:
-          DB_DATABASE: seneca_test
       
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -27,11 +25,7 @@ jobs:
 
       - run: chmod -R 777 storage
 
-      - run: cp .env.testing .env
-
-      - run: ls
-
-      - run: cat .env
+      - run: cp .env.testing .env && ls && cat.env
 
       - run: sudo apt install -y mysql-client
 
