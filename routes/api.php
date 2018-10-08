@@ -26,7 +26,13 @@ Route::post('/users', function (Request $request) {
 });
 
 Route::get('/users', function (Request $request) {
-    return \Response::json([], 200);
+    $sql = 'select users.id, users.email, users.f_name, users.l_name, users.u_name, fund_user.fund_id, fund_user.role
+            from users
+            left join fund_user on users.id = fund_user.user_id;';
+
+    $users = \DB::select($sql);
+
+    return \Response::json($users, 200);
 });
 
 Route::get('/test', function (Request $request) {

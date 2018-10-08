@@ -3091,7 +3091,7 @@ Link.contextTypes = {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(35);
-module.exports = __webpack_require__(86);
+module.exports = __webpack_require__(89);
 
 
 /***/ }),
@@ -3132,13 +3132,10 @@ __webpack_require__(36);
 var App = function (_Component) {
   _inherits(App, _Component);
 
-  function App(props) {
+  function App() {
     _classCallCheck(this, App);
 
-    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
-
-    console.log('asdf');
-    return _this;
+    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
   }
 
   _createClass(App, [{
@@ -27221,6 +27218,9 @@ NavLink.defaultProps = {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_autobind__ = __webpack_require__(86);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_autobind___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_autobind__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_users__ = __webpack_require__(88);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27231,23 +27231,128 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 
 
+
+
 var Home = function (_Component) {
   _inherits(Home, _Component);
 
-  function Home() {
+  function Home(props) {
     _classCallCheck(this, Home);
 
-    return _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this, props));
+
+    _this.state = {
+      users: [],
+      investors: [],
+      managers: [],
+      loading: true
+    };
+
+    __WEBPACK_IMPORTED_MODULE_1_react_autobind___default()(_this);
+    return _this;
   }
 
   _createClass(Home, [{
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      Object(__WEBPACK_IMPORTED_MODULE_2__services_users__["a" /* getUsers */])().then(function (res) {
+        return res.json();
+      }).then(function (data) {
+        _this2.setState({
+          users: data,
+          investors: data.filter(function (user) {
+            return user.role === 'investor';
+          }),
+          managers: data.filter(function (user) {
+            return user.role === 'manager';
+          }),
+          loading: false
+        });
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
-      return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        'div',
-        null,
-        'Hello world'
-      );
+      if (this.state.loading) {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'div',
+          null,
+          'loading...'
+        );
+      } else {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+          'div',
+          null,
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'h2',
+            null,
+            'Fund Managers'
+          ),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            null,
+            this.state.managers.map(function (user) {
+              return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { key: user.id, style: { marginBottom: '12px' } },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'div',
+                  null,
+                  user.u_name
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'div',
+                  null,
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'a',
+                    { href: 'mailto:' + user.email },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                      'button',
+                      null,
+                      'Send Email'
+                    )
+                  )
+                )
+              );
+            })
+          ),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'h2',
+            null,
+            'Investors'
+          ),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            null,
+            this.state.investors.map(function (user) {
+              return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { key: user.id, style: { marginBottom: '12px' } },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'div',
+                  null,
+                  user.u_name
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'div',
+                  null,
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'a',
+                    { href: 'mailto:' + user.email },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                      'button',
+                      null,
+                      'Send Email'
+                    )
+                  )
+                )
+              );
+            })
+          )
+        );
+      }
     }
   }]);
 
@@ -27258,6 +27363,105 @@ var Home = function (_Component) {
 
 /***/ }),
 /* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(87);
+
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, '__esModule', {
+  value: true
+});
+exports['default'] = autoBind;
+var wontBind = ['constructor', 'render', 'componentWillMount', 'componentDidMount', 'componentWillReceiveProps', 'shouldComponentUpdate', 'componentWillUpdate', 'componentDidUpdate', 'componentWillUnmount'];
+
+var toBind = [];
+
+function autoBind(context) {
+  if (context === undefined) {
+    console.error('Autobind error: No context provided.');
+    return;
+  }
+
+  var objPrototype = Object.getPrototypeOf(context);
+
+  if (arguments.length > 1) {
+    // If a list of methods to bind is provided, use it.
+    toBind = Array.prototype.slice.call(arguments, 1);
+  } else {
+    // If no list of methods to bind is provided, bind all available methods in class.
+    toBind = Object.getOwnPropertyNames(objPrototype);
+  }
+
+  toBind.forEach(function (method) {
+    var descriptor = Object.getOwnPropertyDescriptor(objPrototype, method);
+
+    if (descriptor === undefined) {
+      console.warn('Autobind: "' + method + '" method not found in class.');
+      return;
+    }
+
+    // Return if it's special case function or if not a function at all
+    if (wontBind.indexOf(method) !== -1 || typeof descriptor.value !== 'function') {
+      return;
+    }
+
+    Object.defineProperty(objPrototype, method, boundMethod(objPrototype, method, descriptor));
+  });
+}
+
+/**
+* From autobind-decorator (https://github.com/andreypopp/autobind-decorator/tree/master)
+* Return a descriptor removing the value and returning a getter
+* The getter will return a .bind version of the function
+* and memoize the result against a symbol on the instance
+*/
+function boundMethod(objPrototype, method, descriptor) {
+  var fn = descriptor.value;
+
+  return {
+    configurable: true,
+    get: function get() {
+      if (this === objPrototype || this.hasOwnProperty(method)) {
+        return fn;
+      }
+
+      var boundFn = fn.bind(this);
+      Object.defineProperty(this, method, {
+        value: boundFn,
+        configurable: true,
+        writable: true
+      });
+      return boundFn;
+    }
+  };
+}
+module.exports = exports['default'];
+
+
+/***/ }),
+/* 88 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = getUsers;
+function getUsers() {
+  var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+  return fetch('/api/users', {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
+
+/***/ }),
+/* 89 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

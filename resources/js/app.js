@@ -14,11 +14,6 @@ import { BrowserRouter } from 'react-router-dom';
 import Home from './components/Home';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    console.log('asdf');
-  }
-
   render() {
     return (
       <BrowserRouter>
