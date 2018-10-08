@@ -62,3 +62,5 @@ jobs:
       # - run: phpunit
 
       - run: php artisan migrate --database=mysql --force
+
+      - run: php artisan db:seed
