@@ -25,9 +25,11 @@ jobs:
 
       - run: chmod -R 777 storage
 
-      - run: cp .env.testing .env && ls -a && cat .env
-
-      - run: sudo apt install -y mysql-client
+      - run:
+          name: Install PHP extensions
+          command: |
+          sudo docker-php-ext-install pdo_mysql
+          sudo docker-php-ext-enable pdo_mysql
 
       # Download and cache dependencies
       - restore_cache:
