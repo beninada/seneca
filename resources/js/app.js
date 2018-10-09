@@ -13,6 +13,7 @@ import { Redirect, Route, Switch } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import Home from './components/Home';
 import UserProfile from './components/UserProfile';
+import Fund from './components/Fund';
 
 class App extends Component {
   render() {
@@ -22,8 +23,9 @@ class App extends Component {
         <Switch>
           {/* <Route exact path='/' component={Landing} />
           <Route path='/signup' component={Signup} /> */}
-          <Route exact path='/' component={Home} />
-          <Route path='/:u_name' component={UserProfile} />
+          <Route exact path='/' component={ Home } />
+          <Route exact path='/:u_name' component={ UserProfile } />
+          <Route path='/fund/:id' component={ Fund } />
           <Route render={function () {
             return <p>Not Found</p>
           }} />

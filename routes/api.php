@@ -43,6 +43,16 @@ Route::get('/users', function (Request $request) {
     return \Response::json($response, 200);
 });
 
+Route::get('/funds', function (Request $request) {
+    $response = [];
+
+    if ($request->id) {
+        $response = \App\Fund::find($request->id);
+    }
+
+    return \Response::json($response, 200);
+});
+
 Route::get('/test', function (Request $request) {
     \Log::info('test log');
     return \Response::json(['yep works'], 200);
