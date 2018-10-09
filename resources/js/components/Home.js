@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
-import { getUsers } from '../services/users';
 
 class Home extends Component {
   constructor(props) {
@@ -17,16 +16,19 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    getUsers()
-      .then(res => res.json())
-      .then(data => {
-        this.setState({
-          users: data,
-          investors: data.filter(user => user.role === 'investor'),
-          managers: data.filter(user => user.role === 'manager'),
-          loading: false,
-        })
+    fetch('/api/users?all=1', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => res.json())
+    .then(data => {
+      this.setState({
+        users: data,
+        investors: data.filter(user => user.role === 'investor'),
+        managers: data.filter(user => user.role === 'manager'),
+        loading: false,
       })
+    })
   }
 
   render() {
