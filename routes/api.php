@@ -46,6 +46,10 @@ Route::get('/users', function (Request $request) {
 Route::get('/funds', function (Request $request) {
     $response = [];
 
+    if ($request->all) {
+        $response = \App\Fund::all();
+    }
+
     if ($request->id) {
         $response = \App\Fund::with('holdings.tickers')->get()->find($request->id);
     }

@@ -9,6 +9,7 @@ class Home extends Component {
       users: [],
       investors: [],
       managers: [],
+      funds: [],
       loading: true,
     }
 
@@ -29,6 +30,19 @@ class Home extends Component {
         loading: false,
       })
     })
+
+    fetch('/api/funds?all=1', {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' }
+    })
+    .then(res => res.json())
+    .then(data => {
+      this.setState({
+        ...this.state,
+        funds: data,
+        loading: false,
+      })
+    })
   }
 
   render() {
@@ -37,14 +51,14 @@ class Home extends Component {
     } else {
       return (
         <div>
-          <h2>Fund Managers</h2>
+          <div>Fund Managers</div>
           <div>
             {
               this.state.managers.map(user => {
                 return (
                   <div key={user.id} style={{marginBottom: '12px'}}>
                     <div>
-                      {user.u_name}
+                      <a href={user.u_name}>{user.u_name}</a>
                     </div>
                     <div>
                       <a href={'mailto:' + user.email}><button>Send Email</button></a>
@@ -54,17 +68,31 @@ class Home extends Component {
               })
             }
           </div>
-          <h2>Investors</h2>
+          {/* <div>Investors</div>
           <div>
             {
               this.state.investors.map(user => {
                 return (
                   <div key={user.id} style={{marginBottom: '12px'}}>
                     <div>
-                      {user.u_name}
+                      <a href={user.u_name}>{user.u_name}</a>
                     </div>
                     <div>
                       <a href={'mailto:' + user.email}><button>Send Email</button></a>
+                    </div>
+                  </div>
+                )
+              })
+            }
+          </div> */}
+          <div>Funds</div>
+          <div>
+            {
+              this.state.funds.map(fund => {
+                return (
+                  <div key={fund.id}>
+                    <div>
+                      <a href={'fund/' + fund.id}>{fund.name}</a>
                     </div>
                   </div>
                 )

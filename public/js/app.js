@@ -27233,6 +27233,8 @@ NavLink.defaultProps = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_autobind__ = __webpack_require__(34);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_autobind___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_autobind__);
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -27256,6 +27258,7 @@ var Home = function (_Component) {
       users: [],
       investors: [],
       managers: [],
+      funds: [],
       loading: true
     };
 
@@ -27285,6 +27288,18 @@ var Home = function (_Component) {
           loading: false
         });
       });
+
+      fetch('/api/funds?all=1', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      }).then(function (res) {
+        return res.json();
+      }).then(function (data) {
+        _this2.setState(_extends({}, _this2.state, {
+          funds: data,
+          loading: false
+        }));
+      });
     }
   }, {
     key: 'render',
@@ -27300,7 +27315,7 @@ var Home = function (_Component) {
           'div',
           null,
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'h2',
+            'div',
             null,
             'Fund Managers'
           ),
@@ -27314,7 +27329,11 @@ var Home = function (_Component) {
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   'div',
                   null,
-                  user.u_name
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'a',
+                    { href: user.u_name },
+                    user.u_name
+                  )
                 ),
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   'div',
@@ -27333,33 +27352,24 @@ var Home = function (_Component) {
             })
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'h2',
+            'div',
             null,
-            'Investors'
+            'Funds'
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             null,
-            this.state.investors.map(function (user) {
+            this.state.funds.map(function (fund) {
               return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
-                { key: user.id, style: { marginBottom: '12px' } },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                  'div',
-                  null,
-                  user.u_name
-                ),
+                { key: fund.id },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                   'div',
                   null,
                   __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'a',
-                    { href: 'mailto:' + user.email },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                      'button',
-                      null,
-                      'Send Email'
-                    )
+                    { href: 'fund/' + fund.id },
+                    fund.name
                   )
                 )
               );
