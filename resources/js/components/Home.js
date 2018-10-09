@@ -86,6 +86,7 @@ class Home extends Component {
             }
           </div> */}
           <div>Funds</div>
+          <a href='/funds/create-fund'><button>Create Fund</button></a>
           <div>
             {
               this.state.funds.map(fund => {
