@@ -47,7 +47,7 @@ Route::get('/funds', function (Request $request) {
     $response = [];
 
     if ($request->id) {
-        $response = \App\Fund::find($request->id);
+        $response = \App\Fund::with('holdings.tickers')->get()->find($request->id);
     }
 
     return \Response::json($response, 200);

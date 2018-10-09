@@ -39,9 +39,15 @@ class Fund extends Component {
           <div>
             Name: { fund.name }
           </div>
-          <div style={{ marginBottom: '12px' }}>
+          <div>
             Prospectus: { fund.prospectus }
           </div>
+          {
+            fund.holdings.length ? 
+              <div>
+                Holdings: { fund.holdings.tickers.map(ticker => ticker.symbol + ' ') }
+              </div> : ''
+          }
         </div>
       )
     }

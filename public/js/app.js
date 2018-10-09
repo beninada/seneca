@@ -27657,10 +27657,18 @@ var Fund = function (_Component) {
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            { style: { marginBottom: '12px' } },
+            null,
             'Prospectus: ',
             fund.prospectus
-          )
+          ),
+          fund.holdings.length ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            null,
+            'Holdings: ',
+            fund.holdings.tickers.map(function (ticker) {
+              return ticker.symbol + ' ';
+            })
+          ) : ''
         );
       }
     }
