@@ -42,11 +42,19 @@ class UserProfile extends Component {
           <div>
             Location: { this.state.user.profile.city }, { this.state.user.profile.country }
           </div>
-          <div style={{marginBottom: '12px'}}>
+          <div style={{ marginBottom: this.state.user.funds.length ? '0' : '12px' }}>
             Bio: { this.state.user.profile.bio }
-          </div>
+          </div> 
+          {
+            this.state.user.funds.length ?
+              <div style={{marginBottom: '12px'}}>
+                Funds: { this.state.user.funds.map(fund => {
+                  return <span key={fund.id}><a href={'/fund/' + fund.id}>{fund.name} ({fund.role})</a> </span>
+                })}
+              </div> : ''
+          }
           <div>
-            <a href={'mailto:' + this.state.user.email}><button>Send Email</button></a>
+            <a href={ 'mailto:' + this.state.user.email }><button>Send Email</button></a>
           </div>
         </div>
       )

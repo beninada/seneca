@@ -27564,10 +27564,30 @@ var UserProfile = function (_Component) {
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            { style: { marginBottom: '12px' } },
+            { style: { marginBottom: this.state.user.funds.length ? '0' : '12px' } },
             'Bio: ',
             this.state.user.profile.bio
           ),
+          this.state.user.funds.length ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { style: { marginBottom: '12px' } },
+            'Funds: ',
+            this.state.user.funds.map(function (fund) {
+              return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'span',
+                { key: fund.id },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'a',
+                  { href: '/fund/' + fund.id },
+                  fund.name,
+                  ' (',
+                  fund.role,
+                  ')'
+                ),
+                ' '
+              );
+            })
+          ) : '',
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             null,
@@ -27684,11 +27704,16 @@ var Fund = function (_Component) {
             'div',
             null,
             'Managers: ',
-            this.state.fund.users.map(function (user) {
+            this.state.fund.managers.map(function (manager) {
               return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'a',
-                { href: '/' + user.u_name },
-                user.u_name
+                'span',
+                { key: manager.id },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'a',
+                  { href: '/' + manager.u_name },
+                  manager.u_name
+                ),
+                ' '
               );
             })
           ) : ''

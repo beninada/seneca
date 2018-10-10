@@ -28,13 +28,23 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function funds()
-    {
-        return $this->hasMany('App\Fund', 'id');
-    }
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['funds'];
 
     public function profile()
     {
         return $this->hasOne('App\UserProfile');
+    }
+
+    public function getFundsAttribute() {
+        return \DB::select(
+            'select funds.*, fund_user.role from funds
+            join fund_user on funds.id = fund_user.fund_id
+            where fund_user.user_id = ' . $this->id
+        );
     }
 }

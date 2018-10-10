@@ -50,8 +50,8 @@ class Fund extends Component {
           {
             this.state.fund.users.length ? 
               <div>
-                Managers: { this.state.fund.users.map(user => {
-                  return <a href={'/' + user.u_name}>{user.u_name}</a>
+                Managers: { this.state.fund.managers.map(manager => {
+                  return <span key={manager.id}><a href={'/' + manager.u_name}>{manager.u_name}</a> </span>
                 })}
               </div> : ''
           }
