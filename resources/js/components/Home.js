@@ -51,7 +51,7 @@ class Home extends Component {
     } else {
       return (
         <div>
-          <div>Fund Managers</div>
+          <div style={{ marginBottom: '12px' }}>Fund Managers</div>
           <div>
             {
               this.state.managers.map(user => {
@@ -85,8 +85,9 @@ class Home extends Component {
               })
             }
           </div> */}
-          <div>Funds</div>
-          <a href='/funds/create-fund'><button>Create Fund</button></a>
+          <div style={{ paddingTop: '12px', marginBottom: '12px' }}>
+            Funds <a href='/funds/create-fund'><button>Create Fund</button></a>
+          </div>
           <div>
             {
               this.state.funds.map(fund => {

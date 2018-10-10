@@ -30,7 +30,7 @@ class User extends Authenticatable
 
     public function funds()
     {
-        return $this->hasMany('App\Fund');
+        return $this->hasMany('App\Fund', 'id');
     }
 
     public function profile()

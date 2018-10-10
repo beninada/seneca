@@ -9,8 +9,10 @@
         <link href="{{asset('css/app.css')}}" rel="stylesheet" type="text/css">
     </head>
     <body>
-        <nav style="margin-bottom: 24px">Seneca</nav>
-        <div id="root"></div>
+        <div style="max-width: 1440px; margin: 0 auto;">
+            <nav style="padding: 12px 0; margin-bottom: 24px">Seneca</nav>
+            <div id="root"></div>
+        </div>
         <script src="{{asset('js/app.js')}}" ></script>
     </body>
 </html>

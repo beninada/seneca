@@ -22,7 +22,7 @@ class Ticker extends Model
      */
     protected $hidden = [];
 
-    public function holding()
+    public function holdings()
     {
         return $this->belongsToMany('App\Holding');
     }

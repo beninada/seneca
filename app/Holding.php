@@ -22,8 +22,10 @@ class Holding extends Model
      */
     protected $hidden = [];
 
-    public function tickers() {
-        return $this->hasMany('App\Ticker');
+    protected $with = ['ticker'];
+
+    public function ticker() {
+        return $this->hasOne('App\Ticker', 'id');
     }
 
     public function funds() {

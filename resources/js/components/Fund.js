@@ -6,7 +6,9 @@ class Fund extends Component {
     super(props)
 
     this.state = {
-      fund: {},
+      fund: {
+        holdings: []
+      },
       loading: true,
     }
 
@@ -20,7 +22,6 @@ class Fund extends Component {
     })
     .then(res => res.json())
     .then(data => {
-      console.log(data)
       this.setState({
         fund: data,
         loading: false,
@@ -32,20 +33,26 @@ class Fund extends Component {
     if (this.state.loading) {
       return <div>loading...</div>
     } else {
-      let fund = this.state.fund
-
       return (
         <div>
           <div>
-            Name: { fund.name }
+            Name: { this.state.fund.name }
           </div>
           <div>
-            Prospectus: { fund.prospectus }
+            Prospectus: { this.state.fund.prospectus }
           </div>
           {
-            fund.holdings.length ? 
+            this.state.fund.holdings.length ? 
               <div>
-                Holdings: { fund.holdings.tickers.map(ticker => ticker.symbol + ' ') }
+                Holdings: { this.state.fund.holdings.map(holding => holding.ticker.symbol + ' ') }
+              </div> : ''
+          }
+          {
+            this.state.fund.users.length ? 
+              <div>
+                Managers: { this.state.fund.users.map(user => {
+                  return <a href={'/' + user.u_name}>{user.u_name}</a>
+                })}
               </div> : ''
           }
         </div>
