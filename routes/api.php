@@ -29,9 +29,9 @@ Route::get('/users', function (Request $request) {
     $response = [];
 
     if ($request->all) {
-        $sql = 'select users.id, users.email, users.f_name, users.l_name, users.u_name, fund_user.fund_id, fund_user.role
+        $sql = 'select distinct users.id, users.email, users.f_name, users.l_name, users.u_name, fund_user.role
                 from users
-                left join fund_user on users.id = fund_user.user_id;';
+                join fund_user on users.id = fund_user.user_id';
 
         $response = \DB::select($sql);
     }
