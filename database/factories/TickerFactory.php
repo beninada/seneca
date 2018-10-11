@@ -15,10 +15,10 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Ticker::class, function (Faker $faker) {
     $company = $faker->company;
-    $symbol = strtoupper(substr($company, 0, 3));
+    $symbol = strtoupper($faker->unique()->text(3));
 
     return [
         'name' => $company,
-        'symbol' => $symbol->unique(),
+        'symbol' => $symbol,
     ];
 });
