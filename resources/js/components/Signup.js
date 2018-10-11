@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
+import Auth from '../services/Auth';
 
 class Signup extends Component {
   constructor(props) {
@@ -14,6 +15,8 @@ class Signup extends Component {
   }
 
   componentDidMount() {
+    const auth = new Auth();
+    auth.login();
   }
 
   render() {

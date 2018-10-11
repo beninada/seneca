@@ -9,31 +9,49 @@ require('./bootstrap');
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Router, Route, Switch } from 'react-router-dom';
+
 import Home from './components/Home';
 import UserProfile from './components/UserProfile';
 import Fund from './components/Fund';
 import CreateFund from './components/CreateFund';
 import Signup from './components/Signup';
+import Nav from './components/Nav';
+import Auth0Callback from './components/Auth0Callback';
+
+import Auth from './services/Auth';
+import history from './services/history';
+
+const auth = new Auth();
+
+const handleAuthentication = (nextState, replace) => {
+  if (/access_token|id_token|error/.test(nextState.location.hash)) {
+    auth.handleAuthentication();
+  }
+}
 
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
-        {/* { this.error ? <Redirect from='/' to='login' /> : '' } */}
-        <Switch>
-          {/* <Route exact path='/' component={Landing} />
-          <Route path='/signup' component={Signup} /> */}
-          <Route exact path='/' component={ Home } />
-          <Route path='/signup' component={ Signup } />
-          <Route exact path='/funds/create-fund' component={ CreateFund } />
-          <Route path='/fund/:id' component={ Fund } />
-          <Route path='/:u_name' component={ UserProfile } />
-          <Route render={function () {
-            return <p>Not Found</p>
-          }} />
-        </Switch>
-      </BrowserRouter>
+      <Router history={ history }>
+        <div>
+          <Nav auth={ auth } />
+          <Switch>
+            <Route exact path='/' render={props => <Home auth={ auth } {...props} />} />
+            <Route path='/signup' render={props => <Signup auth={ auth } {...props} />} />
+            <Route path="/auth0-callback" render={props => {
+              handleAuthentication(props);
+              return <Auth0Callback {...props} /> 
+            }}/>
+            <Route exact path='/funds/create-fund' render={props => <CreateFund auth={ auth } {...props} />} />
+            <Route path='/fund/:id' render={props => <Fund auth={ auth } {...props} />} />
+            <Route path='/:u_name' render={props => <UserProfile auth={ auth } {...props} />} />
+            <Route render={function () {
+              return <p>Not Found</p>
+            }} />
+          </Switch>
+        </div>
+      </Router>
     );
   }
 }
