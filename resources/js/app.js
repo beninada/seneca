@@ -9,12 +9,12 @@ require('./bootstrap');
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Redirect, Route, Switch } from 'react-router';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './components/Home';
 import UserProfile from './components/UserProfile';
 import Fund from './components/Fund';
 import CreateFund from './components/CreateFund';
+import Signup from './components/Signup';
 
 class App extends Component {
   render() {
@@ -25,9 +25,10 @@ class App extends Component {
           {/* <Route exact path='/' component={Landing} />
           <Route path='/signup' component={Signup} /> */}
           <Route exact path='/' component={ Home } />
-          <Route exact path='/:u_name' component={ UserProfile } />
+          <Route path='/signup' component={ Signup } />
+          <Route exact path='/funds/create-fund' component={ CreateFund } />
           <Route path='/fund/:id' component={ Fund } />
-          <Route path='/funds/create-fund' component={ CreateFund } />
+          <Route path='/:u_name' component={ UserProfile } />
           <Route render={function () {
             return <p>Not Found</p>
           }} />
