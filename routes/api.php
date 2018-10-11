@@ -43,6 +43,30 @@ Route::get('/users', function (Request $request) {
     return \Response::json($response, 200);
 });
 
+Route::post('/funds', function (Request $request) {
+    $requestBody = json_decode($request->getContent());
+    
+    $fund = new \App\Fund;
+    $fund->name = $requestBody->name;
+    $fund->prospectus = $requestBody->prospectus;
+    $fund->save();
+
+    foreach ($requestBody->tickers as $requestTicker) {
+        $ticker = \App\Ticker::firstOrCreate(['symbol' => strtoupper($requestTicker)], ['name' => '']);
+
+        $holding = new \App\Holding;
+        $holding->fund_id = $fund->id;
+        $holding->ticker_id = $ticker->id;
+        $holding->save();
+    }
+
+    // TODO: make all funds belong to user id 1 as manager for now
+    \DB::insert('insert into fund_user (fund_id, user_id, role, updated_at, created_at)
+        values (' . $fund->id . ', 1, "manager", "' . date('Y-m-d H:i:s') . '", "' . date('Y-m-d H:i:s') . '")');
+
+    return \Response::json($fund, 200);
+});
+
 Route::get('/funds', function (Request $request) {
     $response = [];
 

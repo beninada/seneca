@@ -12,7 +12,7 @@ class Ticker extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
+        'name', 'symbol',
     ];
 
     /**

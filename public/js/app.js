@@ -27738,6 +27738,8 @@ var Fund = function (_Component) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_autobind___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_autobind__);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -27756,7 +27758,9 @@ var CreateFund = function (_Component) {
     var _this = _possibleConstructorReturn(this, (CreateFund.__proto__ || Object.getPrototypeOf(CreateFund)).call(this, props));
 
     _this.state = {
-      fund: {}
+      name: '',
+      prospectus: '',
+      tickers: []
     };
 
     __WEBPACK_IMPORTED_MODULE_1_react_autobind___default()(_this);
@@ -27764,8 +27768,40 @@ var CreateFund = function (_Component) {
   }
 
   _createClass(CreateFund, [{
+    key: 'createFund',
+    value: function createFund() {
+      fetch('/api/funds', {
+        method: 'POST',
+        body: JSON.stringify(this.state)
+      }).then(function (res) {
+        return res.json();
+      }).then(function (data) {
+        console.log(data);
+      });
+    }
+  }, {
+    key: 'addHolding',
+    value: function addHolding() {
+      var tickers = this.state.tickers.concat('');
+      this.setState({ tickers: tickers });
+    }
+  }, {
+    key: 'handleChange',
+    value: function handleChange(e) {
+      this.setState(_defineProperty({}, e.target.name, e.target.value));
+    }
+  }, {
+    key: 'handleTickerChange',
+    value: function handleTickerChange(e) {
+      var tickers = this.state.tickers;
+      tickers[e.target.name] = e.target.value;
+      this.setState({ tickers: tickers });
+    }
+  }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         'div',
         null,
@@ -27778,7 +27814,7 @@ var CreateFund = function (_Component) {
             'Name: '
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text' })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', name: 'name', value: this.state.name, onChange: this.handleChange })
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
@@ -27789,7 +27825,7 @@ var CreateFund = function (_Component) {
             'Prospectus: '
           ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('textarea', null)
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('textarea', { name: 'prospectus', value: this.state.prospectus, onChange: this.handleChange })
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
@@ -27799,32 +27835,28 @@ var CreateFund = function (_Component) {
             null,
             'Holdings: '
           ),
+          ' ',
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'button',
+            { onClick: this.addHolding },
+            'Add Holding'
+          ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text' }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text' }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text' }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text' }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text' }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text' }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text' }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text' }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text' }),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null)
+          this.state.tickers.map(function (value, index) {
+            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'div',
+              { key: index },
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('input', { type: 'text', name: index, value: _this2.state.tickers[index] || '', onChange: _this2.handleTickerChange }),
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('br', null)
+            );
+          })
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           null,
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'button',
-            null,
+            { onClick: this.createFund },
             'Create Fund'
           )
         )

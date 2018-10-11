@@ -19,6 +19,6 @@ $factory->define(App\Ticker::class, function (Faker $faker) {
 
     return [
         'name' => $company,
-        'symbol' => $symbol,
+        'symbol' => $symbol->unique(),
     ];
 });

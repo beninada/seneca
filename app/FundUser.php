@@ -12,7 +12,7 @@ class FundUser extends Model
      * @var array
      */
     protected $fillable = [
-        'role',
+        'fund_id', 'user_id', 'role',
     ];
 
     /**
