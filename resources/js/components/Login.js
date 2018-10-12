@@ -20,10 +20,7 @@ class Login extends Component {
       alert('Please fill in both email and password fields.');
     }
 
-    auth.login(this.state)
-      .then(res => {
-        history.replace('/');
-      });
+    auth.login(this.state).then(res => history.replace('/'));
   }
 
   handleChange(e) {

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
 import auth from '../services/auth';
+import history from '../services/history';
 
 class Signup extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ class Signup extends Component {
       alert('Please fill in both email and password fields.');
     }
 
-    auth.signup(this.state);
+    auth.signup(this.state).then(liu => history.replace('/'))
   }
 
   handleChange(e) {

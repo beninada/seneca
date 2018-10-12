@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
+import axios from 'axios';
 
 class UserProfile extends Component {
   constructor(props) {
@@ -14,17 +15,14 @@ class UserProfile extends Component {
   }
 
   componentDidMount() {
-    fetch('/api/users?u_name=' + this.props.match.params.u_name, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(res => res.json())
-    .then(data => {
+    axios.get('/api/users?u_name=' + this.props.match.params.u_name)
+    .then(res => {
       this.setState({
-        user: data,
+        user: res.data,
         loading: false,
       })
     })
+    .catch(err => console.log('Error fetching user', err));
   }
 
   render() {

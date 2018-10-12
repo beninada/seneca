@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
+import axios from 'axios';
 
 class Home extends Component {
   constructor(props) {
@@ -17,31 +18,29 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    fetch('/api/users?all=1', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(res => res.json())
-    .then(data => {
+    axios.get('/api/users?all=1')
+    .then(res => {
       this.setState({
-        users: data,
-        investors: data.filter(user => user.role === 'investor'),
-        managers: data.filter(user => user.role === 'manager'),
+        users: res.data,
+        investors: res.data.filter(user => user.role === 'investor'),
+        managers: res.data.filter(user => user.role === 'manager'),
         loading: false,
       })
+    })
+    .catch(err => {
+      console.error('Error fetching users', err);
     })
 
-    fetch('/api/funds?all=1', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(res => res.json())
-    .then(data => {
+    axios.get('/api/funds?all=1')
+    .then(res => {
       this.setState({
         ...this.state,
-        funds: data,
+        funds: res.data,
         loading: false,
       })
+    })
+    .catch(err => {
+      console.error('Error fetching funds', err);
     })
   }
 

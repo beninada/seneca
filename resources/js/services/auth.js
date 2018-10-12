@@ -9,21 +9,15 @@ export default class auth {
   }
 
   static signup(user) {
-    return fetch('/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: user.email,
-        password: user.password,
-        f_name: user.f_name,
-        l_name: user.l_name,
-        u_name: user.u_name,
-      }),
+    return axios.post('/api/auth/register', {
+      email: user.email,
+      password: user.password,
+      f_name: user.f_name,
+      l_name: user.l_name,
+      u_name: user.u_name,
     })
-    .then(res => res.json())
     .then(res => {
-      rootStore.liu = res;
-      history.replace('/');
-
+      rootStore.liu = res.data;
       return rootStore.liu;
     }, res => {
       alert('Sorry, there was a problem signing you up. Please clear your cookies and cache, then try again.')
@@ -47,28 +41,22 @@ export default class auth {
   }
 
   static logout() {
-    return fetch('/api/auth/logout', {
-      method: 'POST',
-    }).then(res => {
+    return axios.post('/api/auth/logout')
+    .then(res => {
       rootStore.liu = {};
-      history.replace('/');
-
       return rootStore.liu;
-    }, res => {
+    })
+    .catch(err => {
       alert('Sorry, there was a problem logging you out. Please clear your cookies and cache, then try again.')
-      console.error('Logout error', res);
+      console.error('Logout error', err);
     });
   }
 
   static check() {
-    return fetch('/api/auth/check', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    })
-    .then((res) => res.json())
+    return axios.get('/api/auth/check')
     .then((res) => {
-      if (res && res.id) {
-        rootStore.liu = res;
+      if (res.data && res.data.id) {
+        rootStore.liu = res.data;
       }
       
       return rootStore.liu;

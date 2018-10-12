@@ -12,7 +12,7 @@ class Nav extends Component {
   }
 
   logout() {
-    auth.logout();
+    auth.logout().then(res => history.replace('/'));
   }
 
   goToSignup() {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import autoBind from 'react-autobind'
+import axios from 'axios';
 
 class CreateFund extends Component {
   constructor(props) {
@@ -15,14 +16,11 @@ class CreateFund extends Component {
   }
 
   createFund() {
-    fetch('/api/funds', {
-      method: 'POST',
-      body: JSON.stringify(this.state)
+    axios.post('/api/funds', this.state)
+    .then(res => {
+      console.log(res.data)
     })
-    .then(res => res.json())
-    .then(data => {
-      console.log(data)
-    })
+    .catch(err => console.log('Error creating fund', err));
   }
 
   addHolding() {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import autoBind from 'react-autobind'
+import axios from 'axios';
 
 class Fund extends Component {
   constructor(props) {
@@ -16,17 +17,14 @@ class Fund extends Component {
   }
 
   componentDidMount() {
-    fetch('/api/funds?id=' + this.props.match.params.id, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(res => res.json())
-    .then(data => {
+    axios.get('/api/funds?id=' + this.props.match.params.id)
+    .then(res => {
       this.setState({
-        fund: data,
+        fund: res.data,
         loading: false,
       })
     })
+    .catch(err => console.log('Error fetching fund', err));
   }
 
   render() {
