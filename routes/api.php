@@ -18,9 +18,12 @@ use App\Http\Controllers\Auth\RegisterController as RegisterController;
 //     return $request->user();
 // });
 
-Route::post('/auth/register','Auth\RegisterController@create');
+Route::post('/auth/register', function (Request $request) {
+    $registerController = new RegisterController();
+    return $registerController->create($request);
+});
 
-Route::get('/auth/check', function (Illuminate\Http\Request $request) {
+Route::get('/auth/check', function (Request $request) {
     $user = Auth::user();
 
     if ($user) {
@@ -31,13 +34,13 @@ Route::get('/auth/check', function (Illuminate\Http\Request $request) {
     }
 });
 
-Route::post('/auth/login', function () {
+Route::post('/auth/login', function (Request $request) {
     $credentials = [
-        'email' => Input::get('email'),
-        'password' => Input::get('password')
+        'email' => $request->email,
+        'password' => $request->password
     ];
 
-    $attempt = Auth::attempt($credentials, true, true);
+    $attempt = Auth::attempt($credentials, true);
 
     if ($attempt) {
         Auth::loginUsingId(Auth::user()->id);

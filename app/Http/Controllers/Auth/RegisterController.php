@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+use Auth;
 
 class RegisterController extends Controller
 {
@@ -50,9 +52,9 @@ class RegisterController extends Controller
     public function validator(array $data)
     {
         return Validator::make($data, [
-            'f_name' => 'required|string|max:255',
-            'l_name' => 'required|string|max:255',
-            'u_name' => 'required|string|max:255|unique:users',
+            'f_name' => 'string|max:255',
+            'l_name' => 'string|max:255',
+            'u_name' => 'string|max:255|unique:users',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed',
         ]);
@@ -66,26 +68,30 @@ class RegisterController extends Controller
      */
     public function create(Request $request)
     {
-        $validator = validator($request);
+        $requestBody = (array) json_decode($request->getContent());
+        $validator = validator($requestBody);
 
         if ($validator->fails()) {
             throw new ValidationException($validator);
         }
 
-        $user = User::create([
-            'f_name' => $request->f_name,
-            'l_name' => $request->l_name,
-            'u_name' => trim($request->u_name),
-            'email' => strtolower(trim($request->email)),
-            'password' => Hash::make($request->password),
-        ]);
+        $user = new User;
+        $user->f_name = $requestBody['f_name'] ? $requestBody['f_name'] : null;
+        $user->l_name = $requestBody['l_name'] ? $requestBody['l_name'] : null;
+        $user->email = strtolower(trim($requestBody['email']));
+        $user->u_name = $requestBody['u_name'] ? trim($requestBody['u_name']) : $user->email;
+        $user->password = Hash::make($requestBody['password']);
+        $user->save();
 
         UserProfile::create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'city' => isset($requestBody['city']) ? $requestBody['city'] : null,
+            'country' => isset($requestBody['country']) ? $requestBody['country'] : null,
+            'bio' => isset($requestBody['bio']) ? $requestBody['bio'] : null
         ]);
 
-        Auth::login($user);
+        Auth::login($user, true);
 
-        return $user;
+        return Auth::user();
     }
 }

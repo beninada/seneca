@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
+import { view } from 'react-easy-state';
 import rootStore from '../services/rootStore';
 import auth from '../services/auth';
+import history from '../services/history';
 
 class Nav extends Component {
   constructor(props) {
@@ -17,17 +19,27 @@ class Nav extends Component {
     auth.logout();
   }
 
+  goToSignup() {
+    history.push('/signup');
+  }
+
   render() {
     return (
       <nav style={{ height: '48px', padding: '10px 0' }}>
         <span style={{ float: 'left' }}>Seneca</span>
         <span style={{ float: 'right' }}>
-          { !rootStore.liu.id && <button onClick={ this.login.bind(this) }>Log In</button> }
-          { rootStore.liu.id && <button onClick={ this.logout.bind(this) }>Log Out</button> }
+          { !rootStore.liu.id && (
+              <span>
+                <button onClick={ this.login }>Log In</button> 
+                <button onClick={ this.goToSignup }>Sign Up</button>
+              </span>
+            )
+          }
+          { rootStore.liu.id && <button onClick={ this.logout }>Log Out</button> }
         </span>
       </nav>
     );
   }
 }
 
-export default Nav;
+export default view(Nav);

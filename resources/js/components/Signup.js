@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
+import auth from '../services/auth';
 
 class Signup extends Component {
   constructor(props) {
@@ -8,25 +9,65 @@ class Signup extends Component {
     this.state = {
       email: '',
       password: '',
+      f_name: '',
+      l_name: '',
+      u_name: '',
     };
 
     autoBind(this);
   }
 
-  componentDidMount() {
+  signup() {
+    if (!this.state.email || !this.state.password) {
+      alert('Please fill in both email and password fields.');
+    }
+
+    auth.signup(this.state)
+      .then((res) => {
+        console.log(res);
+      });
+  }
+
+  handleChange(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
   render() {
     return (
       <div>
-        <label>
-          Email: 
-          <input type='text' name='email' value={ this.state.email }></input>
-        </label>
-        <label>
-          Password: 
-          <input type='password' name='password' value={ this.state.password }></input>
-        </label>
+        <div>
+          <label>
+            Username: 
+            <input type='text' name='u_name' value={ this.state.u_name } onChange={ this.handleChange }></input>
+          </label>
+        </div>
+        <div>
+          <label>
+            Email: 
+            <input type='text' name='email' value={ this.state.email } onChange={ this.handleChange }></input>
+          </label>
+        </div>
+        <div>
+          <label>
+            First Name: 
+            <input type='text' name='f_name' value={ this.state.f_name } onChange={ this.handleChange }></input>
+          </label>
+        </div>
+        <div>
+          <label>
+            Last Name: 
+            <input type='text' name='l_name' value={ this.state.l_name } onChange={ this.handleChange }></input>
+          </label>
+        </div>
+        <div>
+          <label>
+            Password: 
+            <input type='password' name='password' value={ this.state.password } onChange={ this.handleChange }></input>
+          </label>
+        </div>
+        <div>
+          <button onClick={ this.signup }>Sign Up</button> 
+        </div>
       </div>
     )
   }

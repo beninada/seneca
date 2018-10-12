@@ -19,7 +19,6 @@ import Nav from './components/Nav';
 
 import auth from './services/auth';
 import history from './services/history';
-import rootStore from './services/rootStore';
 
 class App extends Component {
   constructor(props) {

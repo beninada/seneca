@@ -7,30 +7,53 @@ export default class auth {
     autoBind(this);
   }
 
+  static signup(user) {
+    return fetch('/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({
+        email: user.email,
+        password: user.password,
+        f_name: user.f_name,
+        l_name: user.l_name,
+        u_name: user.u_name,
+      }),
+    })
+    .then(res => res.json())
+    .then(res => {
+      rootStore.liu = res;
+      history.replace('/');
+
+      return rootStore.liu;
+    }, res => {
+      console.error('Signup error', res);
+      alert('Sorry, there was a problem signing you up. Please clear your cookies and cache, then try again.')
+    })
+  }
+
   static login() {
     fetch('/api/auth/login', {
       method: 'POST',
     })
-    .then((res) => res.json())
-    .then((res) => {
+    .then(res => res.json())
+    .then(res => {
       rootStore.liu = res;
       history.replace('/');
-    }).error((a, b) => {
-      console.error('Login error');
-      alert('Sorry, there was an error logging you in. Please try again.')
+    }, res => {
+      console.error('Login error', res);
+      alert('Sorry, there was a problem logging you in. Please clear your cookies and cache, then try again.')
     })
   }
 
   static logout() {
     fetch('/api/auth/logout', {
       method: 'POST',
-    }).success((res) => {
+    }).then(res => {
       rootStore.liu = {};
       history.replace('/');
-    }).error((a, b) => {
-      console.error('Logout error');
-      alert('Sorry, there was an error logging you out. Please try again.')
-    })
+    }, res => {
+      console.error('Logout error', res);
+      alert('Sorry, there was a problem logging you out. Please clear your cookies and cache, then try again.')
+    });
   }
 
   static check() {
@@ -45,6 +68,8 @@ export default class auth {
       }
       
       return rootStore.liu;
+    }, res => {
+      console.error('Auth check error', res);
     });
   }
 }
