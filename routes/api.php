@@ -18,6 +18,40 @@ use App\Http\Controllers\Auth\RegisterController as RegisterController;
 //     return $request->user();
 // });
 
+Route::post('/auth/register','Auth\RegisterController@create');
+
+Route::get('/auth/check', function (Illuminate\Http\Request $request) {
+    $user = Auth::user();
+
+    if ($user) {
+        $fullUser = \App\User::where('id', $user->id)->with('profile')->first();
+        return \Response::json($fullUser, 200);
+    } else {
+        return \Response::json([], 401);
+    }
+});
+
+Route::post('/auth/login', function () {
+    $credentials = [
+        'email' => Input::get('email'),
+        'password' => Input::get('password')
+    ];
+
+    $attempt = Auth::attempt($credentials, true, true);
+
+    if ($attempt) {
+        Auth::loginUsingId(Auth::user()->id);
+        return \Response::json(Auth::user(), 200);
+    } else {
+        return \Response::json([], 401);
+    }
+});
+
+Route::post('/auth/logout', function () {
+    Auth::logout();
+    return \Response::json([], 200);
+});
+
 Route::post('/users', function (Request $request) {
     $registerController = new RegisterController();
     $response = $registerController->create($request->all());

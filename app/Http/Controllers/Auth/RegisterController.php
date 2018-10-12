@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\UserProfile;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -63,24 +64,28 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\User
      */
-    public function create(array $data)
+    public function create(Request $request)
     {
-        $validator = validator($data);
+        $validator = validator($request);
 
         if ($validator->fails()) {
-            // return redirect('signup')
-            //             ->withErrors($validator)
-            //             ->withInput();
-
-            return [];
+            throw new ValidationException($validator);
         }
 
-        return User::create([
-            'f_name' => $data['f_name'],
-            'l_name' => $data['l_name'],
-            'u_name' => $data['u_name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+        $user = User::create([
+            'f_name' => $request->f_name,
+            'l_name' => $request->l_name,
+            'u_name' => trim($request->u_name),
+            'email' => strtolower(trim($request->email)),
+            'password' => Hash::make($request->password),
         ]);
+
+        UserProfile::create([
+            'user_id' => $user->id
+        ]);
+
+        Auth::login($user);
+
+        return $user;
     }
 }
