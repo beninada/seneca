@@ -1,6 +1,7 @@
 import history from './history';
 import autoBind from 'react-autobind';
 import rootStore from './rootStore';
+import axios from 'axios';
 
 export default class auth {
   constructor() {
@@ -25,39 +26,42 @@ export default class auth {
 
       return rootStore.liu;
     }, res => {
-      console.error('Signup error', res);
       alert('Sorry, there was a problem signing you up. Please clear your cookies and cache, then try again.')
+      console.error('Signup error', res);
     })
   }
 
-  static login() {
-    fetch('/api/auth/login', {
-      method: 'POST',
+  static login(user) {
+    return axios.post('/api/auth/login', {
+      email: user.email,
+      password: user.password,
     })
-    .then(res => res.json())
     .then(res => {
-      rootStore.liu = res;
-      history.replace('/');
-    }, res => {
-      console.error('Login error', res);
-      alert('Sorry, there was a problem logging you in. Please clear your cookies and cache, then try again.')
+      rootStore.liu = res.data;
+      return rootStore.liu;
     })
+    .catch(err => {
+      alert('Sorry, there was a problem logging you in. Please clear your cookies and cache, then try again.')
+      console.error('Login error', err);
+    });
   }
 
   static logout() {
-    fetch('/api/auth/logout', {
+    return fetch('/api/auth/logout', {
       method: 'POST',
     }).then(res => {
       rootStore.liu = {};
       history.replace('/');
+
+      return rootStore.liu;
     }, res => {
-      console.error('Logout error', res);
       alert('Sorry, there was a problem logging you out. Please clear your cookies and cache, then try again.')
+      console.error('Logout error', res);
     });
   }
 
   static check() {
-    fetch('/api/auth/check', {
+    return fetch('/api/auth/check', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     })

@@ -36,8 +36,8 @@ Route::get('/auth/check', function (Request $request) {
 
 Route::post('/auth/login', function (Request $request) {
     $credentials = [
-        'email' => $request->email,
-        'password' => $request->password
+        'email' => $request->input('email'),
+        'password' => $request->input('password')
     ];
 
     $attempt = Auth::attempt($credentials, true);

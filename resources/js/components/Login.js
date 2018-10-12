@@ -1,28 +1,29 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
 import auth from '../services/auth';
+import history from '../services/history';
 
-class Signup extends Component {
+class Login extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
       email: '',
       password: '',
-      f_name: '',
-      l_name: '',
-      u_name: '',
     };
 
     autoBind(this);
   }
 
-  signup() {
+  login() {
     if (!this.state.email || !this.state.password) {
       alert('Please fill in both email and password fields.');
     }
 
-    auth.signup(this.state);
+    auth.login(this.state)
+      .then(res => {
+        history.replace('/');
+      });
   }
 
   handleChange(e) {
@@ -34,26 +35,8 @@ class Signup extends Component {
       <div>
         <div>
           <label>
-            Username: 
-            <input type='text' name='u_name' value={ this.state.u_name } onChange={ this.handleChange }></input>
-          </label>
-        </div>
-        <div>
-          <label>
             Email: 
             <input type='text' name='email' value={ this.state.email } onChange={ this.handleChange }></input>
-          </label>
-        </div>
-        <div>
-          <label>
-            First Name: 
-            <input type='text' name='f_name' value={ this.state.f_name } onChange={ this.handleChange }></input>
-          </label>
-        </div>
-        <div>
-          <label>
-            Last Name: 
-            <input type='text' name='l_name' value={ this.state.l_name } onChange={ this.handleChange }></input>
           </label>
         </div>
         <div>
@@ -63,11 +46,12 @@ class Signup extends Component {
           </label>
         </div>
         <div>
-          <button onClick={ this.signup }>Sign Up</button> 
+          <button onClick={ this.login }>Log in</button> 
         </div>
+        <a href="mailto:me@beninada.com?subject=I%20forgot%20my%20password">I forgot my password</a>
       </div>
     )
   }
 }
 
-export default Signup;
+export default Login;

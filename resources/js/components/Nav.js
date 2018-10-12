@@ -11,16 +11,16 @@ class Nav extends Component {
     autoBind(this);
   }
 
-  login() {
-    auth.login();
-  }
-
   logout() {
     auth.logout();
   }
 
   goToSignup() {
     history.push('/signup');
+  }
+
+  goToLogin() {
+    history.push('/login');
   }
 
   render() {
@@ -30,7 +30,7 @@ class Nav extends Component {
         <span style={{ float: 'right' }}>
           { !rootStore.liu.id && (
               <span>
-                <button onClick={ this.login }>Log In</button> 
+                <button onClick={ this.goToLogin }>Log In</button> 
                 <button onClick={ this.goToSignup }>Sign Up</button>
               </span>
             )
