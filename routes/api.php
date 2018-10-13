@@ -14,10 +14,6 @@ use App\Http\Controllers\Auth\RegisterController as RegisterController;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
 Route::post('/auth/register', function (Request $request) {
     $registerController = new RegisterController();
     return $registerController->create($request);
@@ -79,6 +75,29 @@ Route::get('/users', function (Request $request) {
 
     return \Response::json($response, 200);
 });
+
+Route::put('/users/{id}', function (Request $request, $id) {
+    $user = \App\User::find($id);
+
+    if ($request->input('u_name') != $user->u_name) {
+        $user->u_name = $request->input('u_name');
+    }
+
+    $user->f_name = $request->input('f_name');
+    $user->l_name = $request->input('l_name');
+    $user->save();
+
+    $userProfile = \App\UserProfile::where('user_id', $user->id)
+                                    ->update([
+                                        'city' => $request->input('city'),
+                                        'country' => $request->input('country'),
+                                        'bio' => $request->input('bio')
+                                    ]);
+
+    $response = \App\User::where('id', $id)->with('profile')->first();
+
+    return \Response::json($response, 200);
+})->middleware('auth');
 
 Route::post('/funds', function (Request $request) {
     $requestBody = json_decode($request->getContent());
