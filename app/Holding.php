@@ -25,7 +25,7 @@ class Holding extends Model
     protected $with = ['ticker'];
 
     public function ticker() {
-        return $this->hasOne('App\Ticker', 'id');
+        return $this->belongsTo('App\Ticker');
     }
 
     public function funds() {

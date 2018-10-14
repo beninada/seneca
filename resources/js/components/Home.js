@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
 import axios from 'axios';
+import rootStore from '../services/rootStore';
+import history from '../services/history';
+import { view } from 'react-easy-state';
 
 class Home extends Component {
   constructor(props) {
@@ -85,7 +88,7 @@ class Home extends Component {
             }
           </div> */}
           <div style={{ paddingTop: '12px', marginBottom: '12px' }}>
-            Funds <a href='/funds/create-fund'><button>Create Fund</button></a>
+            Funds { rootStore.liu.id ? <a onClick={ () => history.replace('/funds/create-fund') }><button>Create Fund</button></a> : '' }
           </div>
           <div>
             {
@@ -106,4 +109,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default view(Home);

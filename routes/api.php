@@ -100,15 +100,13 @@ Route::put('/users/{id}', function (Request $request, $id) {
 })->middleware('auth');
 
 Route::post('/funds', function (Request $request) {
-    $requestBody = json_decode($request->getContent());
-    
     $fund = new \App\Fund;
-    $fund->name = $requestBody->name;
-    $fund->prospectus = $requestBody->prospectus;
+    $fund->name = $request->input('name');
+    $fund->prospectus = $request->input('prospectus');
     $fund->save();
 
-    foreach ($requestBody->tickers as $requestTicker) {
-        $ticker = \App\Ticker::firstOrCreate(['symbol' => strtoupper($requestTicker)], ['name' => '']);
+    foreach ($request->input('tickers') as $ticker) {
+        $ticker = \App\Ticker::firstOrCreate(['symbol' => strtoupper($ticker)], ['name' => '']);
 
         $holding = new \App\Holding;
         $holding->fund_id = $fund->id;
@@ -118,10 +116,33 @@ Route::post('/funds', function (Request $request) {
 
     // TODO: make all funds belong to user id 1 as manager for now
     \DB::insert('insert into fund_user (fund_id, user_id, role, updated_at, created_at)
-        values (' . $fund->id . ', 1, "manager", "' . date('Y-m-d H:i:s') . '", "' . date('Y-m-d H:i:s') . '")');
+        values (' . $fund->id . ', ' . $request->input('user_id') . ', "manager", "' . date('Y-m-d H:i:s') . '", "' . date('Y-m-d H:i:s') . '")');
 
     return \Response::json($fund, 200);
-});
+})->middleware('auth');
+
+Route::put('/funds/{id}', function (Request $request, $id) {
+    $fund = \App\Fund::find($id);
+    $fund->name = $request->input('name');
+    $fund->prospectus = $request->input('prospectus');
+    $fund->save();
+
+    // TODO: naively kill all holdings belonging to this fund and create new ones
+    \App\Holding::query()->where('fund_id', $fund->id)->delete();
+
+    foreach ($request->input('tickers') as $ticker) {
+        $ticker = \App\Ticker::firstOrCreate(['symbol' => strtoupper($ticker)], ['name' => '']);
+
+        $holding = new \App\Holding;
+        $holding->fund_id = $fund->id;
+        $holding->ticker_id = $ticker->id;
+        $holding->save();
+    }
+
+    $response = \App\Fund::with(['holdings', 'users'])->get()->find($id);
+
+    return \Response::json($response, 200); 
+})->middleware('auth');
 
 Route::get('/funds', function (Request $request) {
     $response = [];
