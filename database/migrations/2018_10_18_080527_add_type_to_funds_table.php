@@ -14,7 +14,7 @@ class AddTypeToFundsTable extends Migration
     public function up()
     {
         Schema::table('funds', function (Blueprint $table) {
-            $table->boolean('personal');
+            $table->boolean('personal')->default(true);
         });
     }
 

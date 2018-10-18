@@ -155,6 +155,16 @@ class UserProfile extends Component {
                 </label>
               </div>
             </div>
+            <div>Holdings: <button onClick={ () => this.addHolding() }>Add Holding</button></div>
+            {
+              this.state.holdings.map((value, index) => {
+                return (
+                  <div key={ index }>
+                    <input type='text' name={ index } value={ this.state.holdings[index] || '' } onChange={ (e) => this.handleHoldingChange(e) }></input><br></br>
+                  </div>
+                )
+              })
+            }
             <button onClick={ () => this.submit() }>Submit</button>
             <button onClick={ () => this.cancel() }>Cancel</button>
           </div>
