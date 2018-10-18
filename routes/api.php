@@ -62,11 +62,7 @@ Route::get('/users', function (Request $request) {
     $response = [];
 
     if ($request->all) {
-        $sql = 'select distinct users.id, users.email, users.f_name, users.l_name, users.u_name, fund_user.role
-                from users
-                join fund_user on users.id = fund_user.user_id';
-
-        $response = \DB::select($sql);
+        $response = \App\User::all();
     }
 
     if ($request->u_name) {

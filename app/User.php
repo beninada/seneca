@@ -33,17 +33,27 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $appends = ['funds'];
+    protected $appends = ['holdings'];
 
     public function profile()
     {
         return $this->hasOne('App\UserProfile');
     }
 
-    public function getFundsAttribute() {
+    // public function getFundsAttribute() {
+    //     return \DB::select(
+    //         'select funds.*, fund_user.role from funds
+    //         join fund_user on funds.id = fund_user.fund_id
+    //         where fund_user.user_id = ' . $this->id
+    //     );
+    // }
+
+    public function getHoldingsAttribute() {
         return \DB::select(
-            'select funds.*, fund_user.role from funds
+            'select tickers.* from funds
             join fund_user on funds.id = fund_user.fund_id
+            join holdings on funds.id = holdings.fund_id
+            join tickers on holdings.ticker_id = tickers.id
             where fund_user.user_id = ' . $this->id
         );
     }
