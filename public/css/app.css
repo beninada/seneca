@@ -1,1 +1,5 @@
-body,html{font-family:monospace}
+html,
+body {
+  font-family: monospace;
+}
+
