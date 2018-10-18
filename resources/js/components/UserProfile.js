@@ -73,7 +73,7 @@ class UserProfile extends Component {
     })
     .catch(err => {
       console.error('Error saving profile.', err);
-      // alert('There was an error saving your profile. Please try again.');
+      alert('There was an error saving your profile. Please try again.');
     });
   }
 
@@ -106,17 +106,9 @@ class UserProfile extends Component {
             <div>
               Location: { this.state.user.profile.city }, { this.state.user.profile.country }
             </div>
-            <div style={{ marginBottom: this.state.user.funds.length ? '0' : '12px' }}>
+            <div style={{ marginBottom: '12px' }}>
               Bio: { this.state.user.profile.bio }
             </div> 
-            {
-              this.state.user.funds.length ?
-                <div style={{marginBottom: '12px'}}>
-                  Funds: { this.state.user.funds.map(fund => {
-                    return <span key={fund.id}><a href={'/fund/' + fund.id}>{fund.name} ({fund.role})</a> </span>
-                  })}
-                </div> : ''
-            }
             <div>
               <a href={ 'mailto:' + this.state.user.email }><button>Send Email</button></a>
             </div>
