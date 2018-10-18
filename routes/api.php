@@ -14,9 +14,42 @@ use App\Http\Controllers\Auth\RegisterController as RegisterController;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::post('/auth/register', function (Request $request) {
+    $registerController = new RegisterController();
+    return $registerController->create($request);
+});
+
+Route::get('/auth/check', function (Request $request) {
+    $user = Auth::user();
+
+    if ($user) {
+        $fullUser = \App\User::where('id', $user->id)->with('profile')->first();
+        return \Response::json($fullUser, 200);
+    } else {
+        return \Response::json([], 401);
+    }
+});
+
+Route::post('/auth/login', function (Request $request) {
+    $credentials = [
+        'email' => $request->input('email'),
+        'password' => $request->input('password')
+    ];
+
+    $attempt = Auth::attempt($credentials, true);
+
+    if ($attempt) {
+        Auth::loginUsingId(Auth::user()->id);
+        return \Response::json(Auth::user(), 200);
+    } else {
+        return \Response::json([], 401);
+    }
+});
+
+Route::post('/auth/logout', function () {
+    Auth::logout();
+    return \Response::json([], 200);
+});
 
 Route::post('/users', function (Request $request) {
     $registerController = new RegisterController();
@@ -43,16 +76,37 @@ Route::get('/users', function (Request $request) {
     return \Response::json($response, 200);
 });
 
+Route::put('/users/{id}', function (Request $request, $id) {
+    $user = \App\User::find($id);
+
+    if ($request->input('u_name') != $user->u_name) {
+        $user->u_name = $request->input('u_name');
+    }
+
+    $user->f_name = $request->input('f_name');
+    $user->l_name = $request->input('l_name');
+    $user->save();
+
+    $userProfile = \App\UserProfile::where('user_id', $user->id)
+                                    ->update([
+                                        'city' => $request->input('city'),
+                                        'country' => $request->input('country'),
+                                        'bio' => $request->input('bio')
+                                    ]);
+
+    $response = \App\User::where('id', $id)->with('profile')->first();
+
+    return \Response::json($response, 200);
+})->middleware('auth');
+
 Route::post('/funds', function (Request $request) {
-    $requestBody = json_decode($request->getContent());
-    
     $fund = new \App\Fund;
-    $fund->name = $requestBody->name;
-    $fund->prospectus = $requestBody->prospectus;
+    $fund->name = $request->input('name');
+    $fund->prospectus = $request->input('prospectus');
     $fund->save();
 
-    foreach ($requestBody->tickers as $requestTicker) {
-        $ticker = \App\Ticker::firstOrCreate(['symbol' => strtoupper($requestTicker)], ['name' => '']);
+    foreach ($request->input('tickers') as $ticker) {
+        $ticker = \App\Ticker::firstOrCreate(['symbol' => strtoupper($ticker)], ['name' => '']);
 
         $holding = new \App\Holding;
         $holding->fund_id = $fund->id;
@@ -62,10 +116,33 @@ Route::post('/funds', function (Request $request) {
 
     // TODO: make all funds belong to user id 1 as manager for now
     \DB::insert('insert into fund_user (fund_id, user_id, role, updated_at, created_at)
-        values (' . $fund->id . ', 1, "manager", "' . date('Y-m-d H:i:s') . '", "' . date('Y-m-d H:i:s') . '")');
+        values (' . $fund->id . ', ' . $request->input('user_id') . ', "manager", "' . date('Y-m-d H:i:s') . '", "' . date('Y-m-d H:i:s') . '")');
 
     return \Response::json($fund, 200);
-});
+})->middleware('auth');
+
+Route::put('/funds/{id}', function (Request $request, $id) {
+    $fund = \App\Fund::find($id);
+    $fund->name = $request->input('name');
+    $fund->prospectus = $request->input('prospectus');
+    $fund->save();
+
+    // TODO: naively kill all holdings belonging to this fund and create new ones
+    \App\Holding::query()->where('fund_id', $fund->id)->delete();
+
+    foreach ($request->input('tickers') as $ticker) {
+        $ticker = \App\Ticker::firstOrCreate(['symbol' => strtoupper($ticker)], ['name' => '']);
+
+        $holding = new \App\Holding;
+        $holding->fund_id = $fund->id;
+        $holding->ticker_id = $ticker->id;
+        $holding->save();
+    }
+
+    $response = \App\Fund::with(['holdings', 'users'])->get()->find($id);
+
+    return \Response::json($response, 200); 
+})->middleware('auth');
 
 Route::get('/funds', function (Request $request) {
     $response = [];

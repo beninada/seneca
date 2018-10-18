@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import autoBind from 'react-autobind';
+import axios from 'axios';
+import { view } from 'react-easy-state';
 
 class Home extends Component {
   constructor(props) {
@@ -7,9 +9,6 @@ class Home extends Component {
 
     this.state = {
       users: [],
-      investors: [],
-      managers: [],
-      funds: [],
       loading: true,
     }
 
@@ -17,31 +16,15 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    fetch('/api/users?all=1', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(res => res.json())
-    .then(data => {
+    axios.get('/api/users?all=1')
+    .then(res => {
       this.setState({
-        users: data,
-        investors: data.filter(user => user.role === 'investor'),
-        managers: data.filter(user => user.role === 'manager'),
+        users: res.data,
         loading: false,
       })
     })
-
-    fetch('/api/funds?all=1', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' }
-    })
-    .then(res => res.json())
-    .then(data => {
-      this.setState({
-        ...this.state,
-        funds: data,
-        loading: false,
-      })
+    .catch(err => {
+      console.error('Error fetching users', err);
     })
   }
 
@@ -51,50 +34,17 @@ class Home extends Component {
     } else {
       return (
         <div>
-          <div style={{ marginBottom: '12px' }}>Fund Managers</div>
+          <div>Investors</div>
           <div>
             {
-              this.state.managers.map(user => {
+              this.state.users.map(user => {
                 return (
-                  <div key={user.id} style={{marginBottom: '12px'}}>
+                  <div key={user.id} style={{ marginBottom: '12px' }}>
                     <div>
-                      <a href={user.u_name}>{user.u_name}</a>
+                      <a href={user.u_name}>{ user.u_name }</a>
                     </div>
                     <div>
-                      <a href={'mailto:' + user.email}><button>Send Email</button></a>
-                    </div>
-                  </div>
-                )
-              })
-            }
-          </div>
-          {/* <div>Investors</div>
-          <div>
-            {
-              this.state.investors.map(user => {
-                return (
-                  <div key={user.id} style={{marginBottom: '12px'}}>
-                    <div>
-                      <a href={user.u_name}>{user.u_name}</a>
-                    </div>
-                    <div>
-                      <a href={'mailto:' + user.email}><button>Send Email</button></a>
-                    </div>
-                  </div>
-                )
-              })
-            }
-          </div> */}
-          <div style={{ paddingTop: '12px', marginBottom: '12px' }}>
-            Funds <a href='/funds/create-fund'><button>Create Fund</button></a>
-          </div>
-          <div>
-            {
-              this.state.funds.map(fund => {
-                return (
-                  <div key={fund.id}>
-                    <div>
-                      <a href={'fund/' + fund.id}>{fund.name}</a>
+                      <a href={ 'mailto:' + user.email }><button>Send Email</button></a>
                     </div>
                   </div>
                 )
@@ -107,4 +57,4 @@ class Home extends Component {
   }
 }
 
-export default Home;
+export default view(Home);
